@@ -17,5 +17,9 @@
   "homepage": "https://github.com/MichaelZiHuang/2048#readme",
   "devDependencies": {
     "jest": "^24.0.0"
+  },
+  "dependencies": {},
+  "jest": {
+    "testEnvironment": "jsdom"
   }
 }
