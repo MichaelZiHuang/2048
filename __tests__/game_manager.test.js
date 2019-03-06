@@ -22,4 +22,26 @@ const testGame = new GameManager(
     LocalStorageManager
 );
 
-test('game initialization', () => {});
+test('Ensure 2 Tiles during startup', () => {
+    expect(testGame.startTiles).toBe(2);
+});
+
+test('Fresh Process, Ensure Fresh State', () => {
+    expect(testGame.score).toBe(0);
+    expect(testGame.over).toBe(false);
+    expect(testGame.won).toBe(false);
+    expect(testGame.keepPlaying).toBe(false);
+    expect(testGame.startTiles).toBe(2);
+});
+
+test('Default Grid Size: 4', () => {
+    expect(testGame.size).toBe(4);
+});
+
+test('Test Terminated Game Function', () => {
+    testGame.over = true;
+    expect(testGame.isGameTerminated()).toBe(true);
+    testGame.over = false;
+    testGame.won = false;
+    expect(testGame.isGameTerminated()).toBe(false);
+});
