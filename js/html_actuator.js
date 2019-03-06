@@ -118,6 +118,8 @@ HTMLActuator.prototype.updateScore = function (score) {
 
     this.scoreContainer.appendChild(addition);
   }
+  
+  return score;
 };
 
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
@@ -130,6 +132,8 @@ HTMLActuator.prototype.message = function (won) {
 
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+  
+  return message;
 };
 
 HTMLActuator.prototype.clearMessage = function () {
