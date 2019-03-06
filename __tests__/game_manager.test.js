@@ -31,7 +31,9 @@ test('Fresh Process, Ensure Fresh State', () => {
     expect(testGame.over).toBe(false);
     expect(testGame.won).toBe(false);
     expect(testGame.keepPlaying).toBe(false);
-    expect(testGame.startTiles).toBe(2);
+
+    // Ensure 2 start tiles
+    expect(testGame.grid.availableCells().length).toBe(14);
 });
 
 test('Default Grid Size: 4', () => {
@@ -41,6 +43,7 @@ test('Default Grid Size: 4', () => {
 test('Test Terminated Game Function', () => {
     testGame.over = true;
     expect(testGame.isGameTerminated()).toBe(true);
+
     testGame.over = false;
     testGame.won = false;
     expect(testGame.isGameTerminated()).toBe(false);

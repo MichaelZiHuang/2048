@@ -37,13 +37,13 @@ describe('Testing adding and removing tiles', () => {
         testGrid.insertTile(testTile1);
         expect(testGrid.availableCells().length).toBe(15);
 
-        // Add same tile again, ensure it isn't added to grid
+        // Try to add same tile again, ensure it isn't added to grid
         testGrid.insertTile(testTile1);
         expect(testGrid.availableCells().length).toBe(15);
     });
 
     test('Test removing tiles', () => {
-        // Remove valid tile
+        // Remove tile
         testGrid.removeTile(testTile1);
         expect(testGrid.availableCells().length).toBe(16);
     });
