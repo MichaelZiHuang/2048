@@ -15,8 +15,11 @@ $(document.body).append(
         )
 );
 
-const testGame = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager);
+const testGame = new GameManager(
+    4,
+    KeyboardInputManager,
+    HTMLActuator,
+    LocalStorageManager
+);
 
-test('game initialization', () => {
-    
-});
+test('game initialization', () => {});

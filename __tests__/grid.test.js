@@ -20,5 +20,5 @@ describe('Testing grid initialization', () => {
 });
 
 describe('', () => {
-    const testGrid = new Grid(GRID_SIZE, )
+    const testGrid = new Grid(GRID_SIZE);
 });
