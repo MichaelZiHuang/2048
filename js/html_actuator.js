@@ -1,5 +1,4 @@
-
-//htmlActuator: houses functions for tile, score, and win state management 
+//htmlActuator: houses functions for tile HTML, score, and win state management 
 function HTMLActuator() {
   this.tileContainer    = document.querySelector(".tile-container");
   this.scoreContainer   = document.querySelector(".score-container");
