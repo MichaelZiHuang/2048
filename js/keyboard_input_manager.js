@@ -1,6 +1,7 @@
 function KeyboardInputManager() {
   this.events = {};
-
+  
+  /* Essentially, it chooses either to enable the mouse or a touchscreen input. 
   if (window.navigator.msPointerEnabled) {
     //Internet Explorer 10 style
     this.eventTouchstart    = "MSPointerDown";
@@ -11,10 +12,11 @@ function KeyboardInputManager() {
     this.eventTouchmove     = "touchmove";
     this.eventTouchend      = "touchend";
   }
-
-  this.listen();
+  */
+  this.listen(); // Begins the event listen.
 }
-
+// Create a "list" of events, where if a event is called, the callback is paired.
+// Ideally, these events should only be paired to input events, VIM/Touch/Keyboard
 KeyboardInputManager.prototype.on = function (event, callback) {
   if (!this.events[event]) {
     this.events[event] = [];
@@ -22,6 +24,8 @@ KeyboardInputManager.prototype.on = function (event, callback) {
   this.events[event].push(callback);
 };
 
+// Essentially, if an event is called, especially when it's paired to all types of a key event
+// The event is called for all corresponding callbacks, it assures that every needed event occurs.
 KeyboardInputManager.prototype.emit = function (event, data) {
   var callbacks = this.events[event];
   if (callbacks) {
@@ -30,10 +34,16 @@ KeyboardInputManager.prototype.emit = function (event, data) {
     });
   }
 };
-
+// Major listen function, is paired with "GameManager.prototype.move = function (direction)" in the game_manager.js
 KeyboardInputManager.prototype.listen = function () {
-  var self = this;
-
+  var self = this; // First, grab it's own instance of the Keyboard'
+  // Now, notice that we map a value for each direction defined in our Grid, this corresponds to the game_manager map as well.
+  /*  The amp should correspond to the following list.  
+	  0: up 
+	  1: right
+	  2: down 
+	  3: left
+  */
   var map = {
     38: 0, // Up
     39: 1, // Right
@@ -51,14 +61,14 @@ KeyboardInputManager.prototype.listen = function () {
 
   // Respond to direction keys
   document.addEventListener("keydown", function (event) {
-    //console.log('keydown');
+    //console.log('keydown'); Optional Trace Statement
     var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
                     event.shiftKey;
     var mapped    = map[event.which];
-
+	// Noticeably, when a modifer key above is pressed, all movement keys are effectively canceled.
     if (!modifiers) {
       if (mapped !== undefined) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent our base callback to occur, this is the referenced game_manager function
         self.emit("move", mapped);
       }
     }
@@ -74,8 +84,10 @@ KeyboardInputManager.prototype.listen = function () {
   this.bindButtonPress(".restart-button", this.restart);
   this.bindButtonPress(".keep-playing-button", this.keepPlaying);
 
-  // Respond to swipe events
-  var touchStartClientX, touchStartClientY;
+  // Respond to swipe events OPTIONAL, keep for touch debugging if supported.
+  // Essentially, we treat the touch events as mouse/key events.
+
+/*  var touchStartClientX, touchStartClientY;
   var gameContainer = document.getElementsByClassName("game-container")[0];
 
   gameContainer.addEventListener(this.eventTouchstart, function (event) {
@@ -125,23 +137,23 @@ KeyboardInputManager.prototype.listen = function () {
       // (right : left) : (down : up)
       self.emit("move", absDx > absDy ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
     }
-  });
+  });*/
 };
-
+// Enforce a restart command via emit, noticeably ignores the called in event.
 KeyboardInputManager.prototype.restart = function (event) {
   event.preventDefault();
   this.emit("restart");
 };
-
+// Enforce "keepPlaying", allowing the user to keep playing beyond 2048
 KeyboardInputManager.prototype.keepPlaying = function (event) {
   event.preventDefault();
   this.emit("keepPlaying");
 };
-
+// Bind the button press to the HTML element frontend
 KeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {
   var button = document.querySelector(selector);
   button.addEventListener("click", fn.bind(this));
   button.addEventListener(this.eventTouchend, fn.bind(this));
 };
-
+// Export for test usage.
 module.exports = KeyboardInputManager;

@@ -1,6 +1,6 @@
-const Grid = require('./grid');
+/*const Grid = require('./grid');
 const Tile = require('./tile');
-
+*/
 function GameManager(size, InputManager, Actuator, StorageManager) {
   this.size           = size; // Size of the grid
   this.inputManager   = new InputManager;
