@@ -246,15 +246,15 @@ GameManager.prototype.movesAvailable = function () {
 GameManager.prototype.tileMatchesAvailable = function () {
   var self = this;
 
-  var tile;
+  var tile; // Create a blank variable, we'll instantiate this to a tile's contents by grabbing the cell contents.
 
   for (var x = 0; x < this.size; x++) {
     for (var y = 0; y < this.size; y++) {
       tile = this.grid.cellContent({ x: x, y: y });
 
-      if (tile) {
+      if (tile) {// Essentially, it traverses all possible directions of every tile, it returns true if a movement is possible.
         for (var direction = 0; direction < 4; direction++) {
-          var vector = self.getVector(direction);
+          var vector = self.getVector(direction); // A vector returns the X/Y coordinates
           var cell   = { x: x + vector.x, y: y + vector.y };
 
           var other  = self.grid.cellContent(cell);
@@ -267,7 +267,7 @@ GameManager.prototype.tileMatchesAvailable = function () {
     }
   }
 
-  return false;
+  return false; // Game over.
 };
 
 GameManager.prototype.positionsEqual = function (first, second) {
