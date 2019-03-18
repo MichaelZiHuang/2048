@@ -1,3 +1,5 @@
+
+//htmlActuator: houses functions for tile, score, and win state management 
 function HTMLActuator() {
   this.tileContainer    = document.querySelector(".tile-container");
   this.scoreContainer   = document.querySelector(".score-container");
@@ -7,9 +9,11 @@ function HTMLActuator() {
   this.score = 0;
 }
 
+//actuate: calls score/tile/win-loss functions when needed
 HTMLActuator.prototype.actuate = function (grid, metadata) {
   var self = this;
 
+  //tile HTML management
   window.requestAnimationFrame(function () {
     self.clearContainer(self.tileContainer);
 
@@ -21,9 +25,11 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
       });
     });
 
+    //score management
     self.updateScore(metadata.score);
     self.updateBestScore(metadata.bestScore);
 
+    //win-loss message management
     if (metadata.terminated) {
       if (metadata.over) {
         self.message(false); // You lose
@@ -40,12 +46,14 @@ HTMLActuator.prototype.continueGame = function () {
   this.clearMessage();
 };
 
+//used to clear tiles from the game screen
 HTMLActuator.prototype.clearContainer = function (container) {
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
 };
 
+//creates HTML for tile, manages tile position data, and adds tile to the board
 HTMLActuator.prototype.addTile = function (tile) {
   var self = this;
 
@@ -57,6 +65,7 @@ HTMLActuator.prototype.addTile = function (tile) {
   // We can't use classlist because it somehow glitches when replacing classes
   var classes = ["tile", "tile-" + tile.value, positionClass];
 
+  //add visual effects if tile is of higher value than win state tiles
   if (tile.value > 2048) classes.push("tile-super");
 
   this.applyClasses(wrapper, classes);
@@ -90,19 +99,23 @@ HTMLActuator.prototype.addTile = function (tile) {
   this.tileContainer.appendChild(wrapper);
 };
 
+//helper function to join classes
 HTMLActuator.prototype.applyClasses = function (element, classes) {
   element.setAttribute("class", classes.join(" "));
 };
 
+//helper function to adjust position
 HTMLActuator.prototype.normalizePosition = function (position) {
   return { x: position.x + 1, y: position.y + 1 };
 };
 
+//constructs position class name and returns as string
 HTMLActuator.prototype.positionClass = function (position) {
   position = this.normalizePosition(position);
   return "tile-position-" + position.x + "-" + position.y;
 };
 
+//updates score and displays brief score increase message on screen
 HTMLActuator.prototype.updateScore = function (score) {
   this.clearContainer(this.scoreContainer);
 
@@ -120,10 +133,12 @@ HTMLActuator.prototype.updateScore = function (score) {
   }
 };
 
+//updates best score when called
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
   this.bestContainer.textContent = bestScore;
 };
 
+//displays win or loss message on screen dependant on input
 HTMLActuator.prototype.message = function (won) {
   var type    = won ? "game-won" : "game-over";
   var message = won ? "You win!" : "Game over!";
@@ -132,10 +147,12 @@ HTMLActuator.prototype.message = function (won) {
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
 };
 
+//clears any win/loss message
 HTMLActuator.prototype.clearMessage = function () {
   // IE only takes one value to remove at a time.
   this.messageContainer.classList.remove("game-won");
   this.messageContainer.classList.remove("game-over");
 };
 
+//exports for testing
 module.exports = HTMLActuator;
