@@ -132,7 +132,7 @@ GameManager.prototype.moveTile = function (tile, cell) {
 };
 
 // Move tiles on the grid in the specified direction
-GameManager.prototype.move = function (direction) {// traversal
+GameManager.prototype.move = function (direction) {// traversal is in Game_Manager, may be better to consider moving this to other pieces. 
   // 0: up, 1: right, 2: down, 3: left
   var self = this;
 
@@ -224,7 +224,7 @@ GameManager.prototype.buildTraversals = function (vector) {
   return traversals;
 };
 
-GameManager.prototype.findFarthestPosition = function (cell, vector) {
+GameManager.prototype.findFarthestPosition = function (cell, vector) { // Another refactor possibility, seems to be grid specific.
   var previous;
 
   // Progress towards the vector direction until an obstacle is found
@@ -240,12 +240,12 @@ GameManager.prototype.findFarthestPosition = function (cell, vector) {
   };
 };
 
-GameManager.prototype.movesAvailable = function () {
+GameManager.prototype.movesAvailable = function () { // Refactor possibility, grid specific
   return this.grid.cellsAvailable() || this.tileMatchesAvailable();
 };
 
 // Check for available matches between tiles (more expensive check)
-GameManager.prototype.tileMatchesAvailable = function () {
+GameManager.prototype.tileMatchesAvailable = function () { // Possible refactor section, it may be better for grid to handle this.
   var self = this;
 
   var tile; // Create a blank variable, we'll instantiate this to a tile's contents by grabbing the cell contents.
