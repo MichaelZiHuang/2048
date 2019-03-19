@@ -8,7 +8,7 @@ Grid.prototype.empty = function () {
   var cells = [];
 
   for (var x = 0; x < this.size; x++) {
-    var row = cells[x] = [];
+    var row = cells[x] = []; // Create grid. Note that while we give an X value, we default sit a 4.
 
     for (var y = 0; y < this.size; y++) {
       row.push(null);
@@ -18,7 +18,7 @@ Grid.prototype.empty = function () {
   return cells;
 };
 
-Grid.prototype.fromState = function (state) {
+Grid.prototype.fromState = function (state) { // From a previous game. We use this if we have a cached game we're loading from.
   var cells = [];
 
   for (var x = 0; x < this.size; x++) {
@@ -99,7 +99,7 @@ Grid.prototype.withinBounds = function (position) {
          position.y >= 0 && position.y < this.size;
 };
 
-Grid.prototype.serialize = function () {
+Grid.prototype.serialize = function () { // Push content to the HTML
   var cellState = [];
 
   for (var x = 0; x < this.size; x++) {
