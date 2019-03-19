@@ -1,37 +1,39 @@
+// Game_Manager. Runs the whole game, controls tile traversal logic as well as setting up the game's basic functions'
+
 /*const Grid = require('./grid');
 const Tile = require('./tile');
 */
 function GameManager(size, InputManager, Actuator, StorageManager) {
   this.size           = size; // Size of the grid
-  this.inputManager   = new InputManager;
+  this.inputManager   = new InputManager; // instantiate new variables for the grid, these are mere storing variables for now.
   this.storageManager = new StorageManager;
   this.actuator       = new Actuator;
 
-  this.startTiles     = 2;
+  this.startTiles     = 2; // Default to 2 on startup
 
-  this.inputManager.on("move", this.move.bind(this));
+  this.inputManager.on("move", this.move.bind(this)); // Bind buttons on the UI to the fit function.
   this.inputManager.on("restart", this.restart.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
-  this.setup();
+  this.setup(); // Setup game, previous game status irrelevant
 }
 
 // Restart the game
 GameManager.prototype.restart = function () {
-  this.storageManager.clearGameState();
+  this.storageManager.clearGameState(); // Clear old game state, (keep old scores)
   this.actuator.continueGame(); // Clear the game won/lost message
-  this.setup();
+  this.setup(); // Run setup once more
 };
 
 // Keep playing after winning (allows going over 2048)
 GameManager.prototype.keepPlaying = function () {
-  this.keepPlaying = true;
+  this.keepPlaying = true; // Disable 2048 win condition, keep going
   this.actuator.continueGame(); // Clear the game won/lost message
 };
 
 // Return true if the game is lost, or has won and the user hasn't kept playing
 GameManager.prototype.isGameTerminated = function () {
-  return this.over || (this.won && !this.keepPlaying);
+  return this.over || (this.won && !this.keepPlaying); // End game, enforce restart
 };
 
 // Set up the game
@@ -43,37 +45,37 @@ GameManager.prototype.setup = function () {
     this.grid        = new Grid(previousState.grid.size,
                                 previousState.grid.cells); // Reload grid
     this.score       = previousState.score;
-    this.over        = previousState.over;
+    this.over        = previousState.over; // Grab data from local storage manager, restart from a previous game state.
     this.won         = previousState.won;
     this.keepPlaying = previousState.keepPlaying;
   } else {
-    this.grid        = new Grid(this.size);
+    this.grid        = new Grid(this.size); // Fresh slate, essentially restart the game from scratch.
     this.score       = 0;
     this.over        = false;
     this.won         = false;
     this.keepPlaying = false;
 
     // Add the initial tiles
-    this.addStartTiles();
+    this.addStartTiles(); // Add start tiles based on the variable in the intial startup.
   }
 
   // Update the actuator
-  this.actuate();
+  this.actuate(); // Reflect in the HTML
 };
 
 // Set up the initial tiles to start the game with
 GameManager.prototype.addStartTiles = function () {
   for (var i = 0; i < this.startTiles; i++) {
-    this.addRandomTile();
+    this.addRandomTile(); // Add random tiles based on another function, possible refactor option.
   }
 };
 
 // Adds a tile in a random position
-GameManager.prototype.addRandomTile = function () {
+GameManager.prototype.addRandomTile = function () { // Add random tile
   if (this.grid.cellsAvailable()) {
     var value = Math.random() < 0.9 ? 2 : 4;
-    var tile = new Tile(this.grid.randomAvailableCell(), value);
-
+    var tile = new Tile(this.grid.randomAvailableCell(), value); // Calls grid availabilty function
+	// Notably used when the player inputs a key OR when the game starts up.
     this.grid.insertTile(tile);
   }
 };
@@ -93,7 +95,7 @@ GameManager.prototype.actuate = function () {
 
   this.actuator.actuate(this.grid, {
     score:      this.score,
-    over:       this.over,
+    over:       this.over, // Reflect state in the HTML
     won:        this.won,
     bestScore:  this.storageManager.getBestScore(),
     terminated: this.isGameTerminated()
@@ -106,14 +108,14 @@ GameManager.prototype.serialize = function () {
   return {
     grid:        this.grid.serialize(),
     score:       this.score,
-    over:        this.over,
+    over:        this.over, // Build game as an object, essentially a box of pullable items.
     won:         this.won,
     keepPlaying: this.keepPlaying
   };
 };
 
 // Save all tile positions and remove merger info
-GameManager.prototype.prepareTiles = function () {
+GameManager.prototype.prepareTiles = function () { 
   this.grid.eachCell(function (x, y, tile) {
     if (tile) {
       tile.mergedFrom = null;
@@ -130,7 +132,7 @@ GameManager.prototype.moveTile = function (tile, cell) {
 };
 
 // Move tiles on the grid in the specified direction
-GameManager.prototype.move = function (direction) {
+GameManager.prototype.move = function (direction) {// traversal
   // 0: up, 1: right, 2: down, 3: left
   var self = this;
 
